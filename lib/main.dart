@@ -1,0 +1,79 @@
+import 'dart:ui';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_app/config/theme.dart';
+import 'package:flutter_app/firebase_options.dart';
+import 'package:flutter_app/services/local_storage/shared_preference.dart';
+import 'package:flutter_app/services/network_service/network_error_screen.dart';
+import 'package:flutter_app/services/network_service/network_notifier.dart';
+import 'package:flutter_app/services/routes/route_name/route_name.dart';
+import 'package:flutter_app/services/routes/route_page/route_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
+import 'services/api/notification_service/notifiction_service.dart';
+
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  print("Handling background message: ${message.messageId}");
+}
+
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  await NotificationService.init();
+  final prefs = SharedPreferencesHelper();
+  await prefs.init();
+
+  String? deviceToken = await NotificationService.getToken();
+  if (deviceToken != null) {
+    debugPrint("--------- DEVICE TOKEN: $deviceToken ---------");
+    await prefs.setString("DToken", deviceToken);
+  }
+  runApp(const ProviderScope(child: MyApp()));
+}
+
+class MyApp extends ConsumerWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isConnectedAsync = ref.watch(networkStatusProvider);
+    final isConnected = isConnectedAsync.maybeWhen(
+      data: (value) => value,
+      orElse: () => true,
+    );
+
+    return GetMaterialApp(
+      title: 'SSJSC',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      initialRoute: AppRoutes.splash,
+      getPages: AppPages.routes,
+      builder: (context, child) {
+        return Material( // Added Material wrapper
+          child: Stack(
+            children: [
+              child!,
+              if (!isConnected) const NetworkOverlay(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
