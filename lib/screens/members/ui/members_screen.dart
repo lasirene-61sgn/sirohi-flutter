@@ -108,15 +108,15 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                     icon: const Icon(Icons.filter_list_alt),
                     onPressed: () => _showMultiFilter(context),
                   ),
-                  SizedBox(width: 1,),
-                  IconButton(
-                    icon: const Icon(Icons.picture_as_pdf,color: Colors.red),
-                    tooltip: 'Download Full List',
-                    onPressed: () {
-                      final members = ref.read(membersNotifierProvider).membersList;
-                      PdfHelper.downloadFullMemberList(members);
-                    },
-                  ),
+                  // SizedBox(width: 1,),
+                  // IconButton(
+                  //   icon: const Icon(Icons.picture_as_pdf,color: Colors.red),
+                  //   tooltip: 'Download Full List',
+                  //   onPressed: () {
+                  //     final members = ref.read(membersNotifierProvider).membersList;
+                  //     PdfHelper.downloadFullMemberList(members);
+                  //   },
+                  // ),
                 ],
               ),
             ),
