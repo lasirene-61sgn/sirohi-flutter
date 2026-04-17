@@ -61,5 +61,7 @@
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>SSJSC needs access to your photos to allow you to upload profile pictures and business listing images.</string>
 </dict>
 </plist>
