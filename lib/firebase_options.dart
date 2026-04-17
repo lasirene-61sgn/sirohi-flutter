@@ -8,17 +8,26 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError('iOS not configured');
+        return ios; // Return placeholder for iOS
       default:
         throw UnsupportedError('Platform not supported');
     }
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBx-mk8C0Ru4WIPf6VI0sJMu_a70scfKTI', // Found in google-services.json -> current_key
-    appId: '1:450152570522:android:bf831e97b0e27e91ea0923',   // Found in google-services.json -> mobilesdk_app_id
-    messagingSenderId: '450152570522', // Found in google-services.json -> project_number
-    projectId: 'sirohi-app',       // Found in google-services.json -> project_id
+    apiKey: 'AIzaSyBx-mk8C0Ru4WIPf6VI0sJMu_a70scfKTI',
+    appId: '1:450152570522:android:bf831e97b0e27e91ea0923',
+    messagingSenderId: '450152570522',
+    projectId: 'sirohi-app',
     storageBucket: 'sirohi-app.firebasestorage.app',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'placeholder-ios-api-key',
+    appId: 'placeholder-ios-app-id',
+    messagingSenderId: 'placeholder-ios-sender-id',
+    projectId: 'placeholder-ios-project-id',
+    storageBucket: 'placeholder-ios-storage-bucket',
+    iosBundleId: 'com.sirohi.ssjsc',
   );
 }
