@@ -63,5 +63,11 @@
 	<false/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>SSJSC needs access to your photos to allow you to upload profile pictures and business listing images.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>SSJSC needs access to your photos to allow you to save profile pictures and listing images to your library.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>SSJSC needs access to your camera to allow you to take and upload profile pictures and business listing images.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>SSJSC needs access to your microphone to allow you to record videos for business listings.</string>
 </dict>
 </plist>
