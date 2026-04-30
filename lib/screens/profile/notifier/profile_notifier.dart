@@ -5,11 +5,14 @@ import 'package:flutter_app/screens/profile/model/family_member_model.dart';
 import 'package:flutter_app/screens/profile/model/profile_model.dart';
 import 'package:flutter_app/services/api/api_client/api_client.dart';
 import 'package:flutter_app/services/api/repo/repo.dart';
+import 'package:flutter_app/services/local_storage/shared_preference.dart';
+import 'package:flutter_app/services/routes/route_name/route_name.dart';
 import 'package:flutter_app/services/widget/custom_msg.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_app/screens/events/model/event_model.dart';
+import 'package:get/get.dart';
 
 import '../model/about_us_model.dart';
 
@@ -380,6 +383,8 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
       );
     }
   }
+
+
 }
 
 

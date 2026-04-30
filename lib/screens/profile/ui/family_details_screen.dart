@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/profile/notifier/profile_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../config/theme.dart';
 
 import 'package:flutter/material.dart';
@@ -319,16 +321,61 @@ class _AddFamilyMemberDialogState extends State<_AddFamilyMemberDialog> {
 
   // IMAGE PICKER
   Future<void> _pickImage(ImageSource source) async {
-    final XFile? picked = await _picker.pickImage(
-      source: source,
-      imageQuality: 80,
-    );
+    try {
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        if (source == ImageSource.camera) {
+          var status = await Permission.camera.request();
+          if (status.isPermanentlyDenied) {
+            _showPermissionDialog('Camera');
+            return;
+          }
+          if (!status.isGranted) return;
+        } else {
+          var status = await Permission.photos.request();
+          if (status.isPermanentlyDenied) {
+            _showPermissionDialog('Photo Library');
+            return;
+          }
+          if (!status.isGranted) return;
+        }
+      }
 
-    if (picked != null) {
-      setState(() {
-        _selectedImage = File(picked.path);
-      });
+      final XFile? picked = await _picker.pickImage(
+        source: source,
+        imageQuality: 80,
+      );
+
+      if (picked != null) {
+        setState(() {
+          _selectedImage = File(picked.path);
+        });
+      }
+    } catch (e) {
+      debugPrint("Error picking image: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to open ${source == ImageSource.camera ? 'camera' : 'gallery'}: $e")),
+      );
     }
+  }
+
+  void _showPermissionDialog(String type) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('$type Permission'),
+        content: Text('$type access is required to upload member pictures. Please enable it in settings.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              openAppSettings();
+            },
+            child: const Text('Settings'),
+          ),
+        ],
+      ),
+    );
   }
 
   // DATE PICKER

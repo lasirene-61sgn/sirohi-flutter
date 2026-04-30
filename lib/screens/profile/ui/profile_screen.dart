@@ -252,8 +252,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-
-
   Widget _buildProfileOption(
     BuildContext context, {
     required IconData icon,

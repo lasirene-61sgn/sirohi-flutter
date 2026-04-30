@@ -4,7 +4,7 @@ description: "Shree Sirohi Jain Sangh Chennai - Community Member App"
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+11
+version: 1.0.0+12
 
 environment:
   sdk: ^3.9.2
@@ -32,7 +32,7 @@ dependencies:
   shared_preferences: 2.5.3
   
   # Image Handling
-  image_picker: 1.1.2
+  image_picker: ^1.2.2
   cached_network_image: 3.4.1
   file_picker:
   flutter_riverpod:
@@ -53,7 +53,7 @@ dependencies:
   intl: ^0.20.2
   firebase_core:
   firebase_messaging:
-  flutter_local_notifications:
+  flutter_local_notifications: 19.5.0
   android_intent_plus:
   video_player: ^2.9.2
   chewie: ^1.10.0

@@ -3,8 +3,10 @@ import 'package:flutter_app/config/theme.dart';
 import 'package:flutter_app/screens/profile/notifier/profile_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
   // final Member member;
@@ -138,17 +140,62 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     await ref.read(profileNotifierProvider.notifier).submitProfile(context, updatedMember, _profileImage);
   }
   Future<void> _pickImage(ImageSource source) async {
-    final XFile? pickedFile = await _picker.pickImage(
-      source: source,
-      imageQuality: 80, // compress
-      maxWidth: 800,
-    );
+    try {
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        if (source == ImageSource.camera) {
+          var status = await Permission.camera.request();
+          if (status.isPermanentlyDenied) {
+            _showPermissionDialog('Camera');
+            return;
+          }
+          if (!status.isGranted) return;
+        } else {
+          var status = await Permission.photos.request();
+          if (status.isPermanentlyDenied) {
+            _showPermissionDialog('Photo Library');
+            return;
+          }
+          if (!status.isGranted) return;
+        }
+      }
 
-    if (pickedFile != null) {
-      setState(() {
-        _profileImage = File(pickedFile.path);
-      });
+      final XFile? pickedFile = await _picker.pickImage(
+        source: source,
+        imageQuality: 80,
+        maxWidth: 800,
+      );
+
+      if (pickedFile != null) {
+        setState(() {
+          _profileImage = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      debugPrint("Error picking image: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to open ${source == ImageSource.camera ? 'camera' : 'gallery'}: $e")),
+      );
     }
+  }
+
+  void _showPermissionDialog(String type) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('$type Permission'),
+        content: Text('$type access is required to upload profile pictures. Please enable it in settings.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              openAppSettings();
+            },
+            child: const Text('Settings'),
+          ),
+        ],
+      ),
+    );
   }
   void _showImagePickerSheet(BuildContext context) {
     showModalBottomSheet(
