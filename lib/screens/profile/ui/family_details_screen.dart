@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/profile/notifier/profile_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -72,6 +73,9 @@ class _FamilyDetailsScreenState extends ConsumerState<FamilyDetailsScreen> {
     return Scaffold(
       // backgroundColor: AppTheme.primaryBlue,
       appBar: AppBar(
+        leading: IconButton(onPressed: (){
+          Get.back();
+        }, icon: Icon(Icons.arrow_back_ios,color: Colors.black,)),
         title: const Text('Family Details'),
         backgroundColor:Colors.white,
         foregroundColor: AppTheme.backgroundWhite,

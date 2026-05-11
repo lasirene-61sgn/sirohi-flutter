@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screens/auth/admin_details_screen.dart';
 import 'package:flutter_app/screens/auth/login/notifier/login_notifier.dart';
 import 'package:flutter_app/services/api/notification_service/notifiction_service.dart';
 import 'package:flutter_app/services/local_storage/shared_preference.dart';
@@ -219,6 +221,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   label: const Text('First Time User? Register with OTP'),
                   style: TextButton.styleFrom(foregroundColor: AppTheme.primaryBlue),
                 ),
+
+                if (Platform.isIOS) ...[
+                  const SizedBox(height: 24),
+                  const Divider(),
+                  const SizedBox(height: 16),
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AdminDetailsScreen()),
+                      );
+                    },
+                    icon: const Icon(Icons.person_outline),
+                    label: const Text('Guest User / Admin Details'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppTheme.primaryBlue,
+                      side: const BorderSide(color: AppTheme.primaryBlue),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

@@ -238,6 +238,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         ),
                         _buildProfileOption(
                           context,
+                          icon: Icons.delete,
+                          title: 'Delete Account',
+                          textColor: Colors.red,
+                          onTap: () {
+                            _showDeleteDialog(context);
+                          },
+                        ),
+                        _buildProfileOption(
+                          context,
                           icon: Icons.logout,
                           title: 'Logout',
                           textColor: Colors.red,
@@ -329,6 +338,30 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ElevatedButton(
             onPressed: () async {
               await ref.read(loginProvider.notifier).logout();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
+  }
+  void _showDeleteDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Account'),
+        content: const Text('Are you sure you want to Delete Account?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await ref.read(loginProvider.notifier).deleteAccount();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,

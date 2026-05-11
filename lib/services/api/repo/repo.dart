@@ -23,6 +23,12 @@ class Repo {
       map: {},
     );
   }
+  Future<dynamic> deleteAccount() async {
+    return await ApiClient().post(
+      url: 'api/customer/delete-account',
+      map: {},
+    );
+  }
   Future<dynamic> buyer({String? url}) async {
     print(url);
     return await ApiClient().get(

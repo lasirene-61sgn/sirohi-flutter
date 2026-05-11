@@ -16,6 +16,7 @@ class LoginState {
   final bool isOtpLoading;      // Register/First Time loader
   final bool isForgotLoading;   // Forgot Password loader
   final bool isLoggedIn;
+  final bool isDelete;
   final String? error;
   final String? mobile;
   final String? otp;
@@ -24,6 +25,7 @@ class LoginState {
   const LoginState({
     this.isLoading = false,
     this.isOtpLoading = false,
+    this.isDelete = false,
     this.isForgotLoading = false,
     this.isLoggedIn = false,
     this.error,
@@ -36,6 +38,7 @@ class LoginState {
     bool? isLoading,
     bool? isOtpLoading,
     bool? isForgotLoading,
+    bool? isDelete,
     bool? isLoggedIn,
     String? error,
     String? mobile,
@@ -45,6 +48,7 @@ class LoginState {
     return LoginState(
       isLoading: isLoading ?? this.isLoading,
       isOtpLoading: isOtpLoading ?? this.isOtpLoading,
+      isDelete: isDelete ?? this.isDelete,
       isForgotLoading: isForgotLoading ?? this.isForgotLoading,
       isLoggedIn: isLoggedIn ?? this.isLoggedIn,
       error: error ?? this.error,
@@ -211,6 +215,28 @@ class LoginNotifier extends StateNotifier<LoginState> {
     } catch (e, stackTrace) {
       print("Logout error: $e\n$stackTrace");
       state = state.copyWith(isLoading: false, error: "Logout failed");
+    }
+  }
+  Future<void> deleteAccount() async {
+    state = state.copyWith(isDelete: true);
+    try {
+      final response = await Repo().deleteAccount();
+      if(response['status'] == 1) {
+        await SharedPreferencesHelper().init();
+        await SharedPreferencesHelper().clear();
+
+        Get.offAllNamed(AppRoutes.login);
+
+        Toaster.showSuccess(response['data']?["message"] ?? "Account Deleted Successfully");
+        state = state.copyWith(isDelete: false, error: "Account Deleted failed",);
+      }else{
+        Toaster.showError(response['message'] ?? response['message']?["message"] ?? "Account Deleted failed");
+
+        state = state.copyWith(isDelete: false, error: response['message'] ?? response['message']?["message"] ?? "Account Deleted failed");
+      }
+    } catch (e, stackTrace) {
+      print("Logout error: $e\n$stackTrace");
+      state = state.copyWith(isDelete: false, error: "Account Deleted failed");
     }
   }
 }
